@@ -15,7 +15,7 @@ def main():
 	# 初始化
 	pygame.init()
 	pygame.mixer.init()
-	screen = pygame.display.set_mode((630, 680),FULLSCREEN)
+	screen = pygame.display.set_mode((630, 680), FULLSCREEN)
 	pygame.display.set_caption("坦克大战——哈哈哈")
 	#加载字体
 	font_bar = pygame.font.Font('./font/simkai.ttf', 630 // 40)
@@ -184,7 +184,7 @@ def main():
 					for each in mytanksGroup:
 						mytanksGroup.protected = False
 				if event.type == pygame.KEYDOWN:
-					if event.type == pygame.K_ESCAPE or event.key == pygame.K_q:
+					if event.key == pygame.K_ESCAPE or event.key == pygame.K_q:
 						sys.exit()
 			# 检查用户键盘操作
 			key_pressed = pygame.key.get_pressed()
@@ -499,12 +499,12 @@ def main():
 			screen.blit(myhome.home, myhome.rect)
 			# 食物
 			for myfood in myfoodsGroup:
-				if myfood.being and myfood.time > 0:
+				if myfood.exist and myfood.exist_time > 0:
 					screen.blit(myfood.food, myfood.rect)
-					myfood.time -= 1
+					myfood.exist_time -= 1
 					for tank_player in mytanksGroup:
 						if pygame.sprite.collide_rect(tank_player, myfood):
-							tank_player.score+=10
+							tank_player.score += 10
 							# 消灭当前所有敌人
 							if myfood.kind == 0:
 								for _ in enemytanksGroup:
@@ -542,6 +542,10 @@ def main():
 								if music:
 									add_sound.play()
 								tank_player.life += 1
+							# 坦克吃到金币加分
+							if myfood.kind == 7:
+								add_sound.play()
+								tank_player.score += 40
 							myfood.being = False
 							myfoodsGroup.remove(myfood)
 							break

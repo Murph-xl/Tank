@@ -15,16 +15,20 @@ class Food(pg.sprite.Sprite):
         # 可以击碎钢板的强力子弹
         self.food_powerbullet = './images/food/food_powerbullet.png'
         # 加固大本营的墙为钢板
-        self.food_ironwall = './images/food/food_powerbullet.png'
+        self.food_ironwall = './images/food/food_ironwall.png'
         # 获得一个保护罩
         self.food_protect = './images/food/food_protect.png'
         # 坦克升级
-        self.food_level_up = './images/food/food_Level_up.png'
+        self.food_level_up = './images/food/food_level_up.png'
         # 坦克生命增加1
         self.food_life = './images/food/food_life.png'
+        # 金币加分
+        self.food_coin = './images/food/coin.png'
+
 
         # 用一个列表储存所有食物
-        self.foods = [self.food_boom, self.food_sleep, self.food_powerbullet, self.food_ironwall, self.food_level_up, self.food_protect, self.food_life]
+        self.foods = [self.food_boom, self.food_sleep, self.food_powerbullet, self.food_ironwall, self.food_level_up,
+                      self.food_protect, self.food_life, self.food_coin]
 
         # 食物种类
         self.kind = None
@@ -39,7 +43,7 @@ class Food(pg.sprite.Sprite):
 
     def generate(self):
         # 随机生成食物种类序号0-6
-        self.kind = random.randint(0, 6)
+        self.kind = random.randint(0, 7)
         # 根据序号加载食物图像
         self.food = pg.image.load(self.foods[self.kind]).convert_alpha()
         # 设置食物大小

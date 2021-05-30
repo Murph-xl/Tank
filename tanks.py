@@ -37,11 +37,9 @@ class myTank(pygame.sprite.Sprite):
         self.protected_mask2 = self.protected_mask.subsurface((48, 0), (48, 48))
         # 坦克方向
         self.direction_x, self.direction_y = 0, -1
-<<<<<<< HEAD
+
         # 生成自己的地雷
         self.generate_mine()
-=======
->>>>>>> e81af93b2ec49e86dccbef22a23fee9793d81d1f
         # 不同玩家的出生位置不同
         if player == 1:
             self.rect.left, self.rect.top = 3 + 24 * 8, 3 + 24 * 24 + 50
@@ -60,14 +58,12 @@ class myTank(pygame.sprite.Sprite):
         # 子弹
         self.bullet = Bullet()
 
-<<<<<<< HEAD
+
     def set_mine(self):
         self.mine_obj = Mine()
         self.mine_obj.image_mine = pygame.image.load('./images/others/mine.png')
         self.mine_obj.being = True
 
-=======
->>>>>>> e81af93b2ec49e86dccbef22a23fee9793d81d1f
     # 射击
     def shoot(self):
         self.bullet.being = True
@@ -101,8 +97,6 @@ class myTank(pygame.sprite.Sprite):
         else:
             raise ValueError('myTank class -> level value error.')
 
-<<<<<<< HEAD
-=======
     # 放置砖块
     def set_brick(self):
         self.brick_obj = scene.Brick()
@@ -133,7 +127,6 @@ class myTank(pygame.sprite.Sprite):
         self.tree_obj.rect.right = self.rect.right
         self.tree_obj.rect.bottom = self.rect.bottom
 
->>>>>>> e81af93b2ec49e86dccbef22a23fee9793d81d1f
     # 等级提升
     def up_level(self):
         if self.level < 3:
@@ -261,7 +254,6 @@ class myTank(pygame.sprite.Sprite):
             is_move = False
         return is_move
 
-<<<<<<< HEAD
     def generate_mine(self):
         self.mines = []
         # self.mines.image_mine
@@ -299,8 +291,6 @@ class myTank(pygame.sprite.Sprite):
                     mine.active = True
                 break
 
-=======
->>>>>>> e81af93b2ec49e86dccbef22a23fee9793d81d1f
     # 死后重置
     def reset(self):
         self.level = 0

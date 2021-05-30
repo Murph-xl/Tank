@@ -37,12 +37,12 @@ class Food(pg.sprite.Sprite):
         # 图像大小
         self.rect = None
         # 是否在界面上出现 默认不出现
-        self.exist = False
+        self.being = False
         # 存在的时间 1000ms
-        self.exist_time = 1000
+        self.time = 1000
 
     def generate(self):
-        # 随机生成食物种类序号0-6
+        # 随机生成食物种类序号0-7
         self.kind = random.randint(0, 7)
         # 根据序号加载食物图像
         self.food = pg.image.load(self.foods[self.kind]).convert_alpha()
@@ -51,5 +51,5 @@ class Food(pg.sprite.Sprite):
         self.rect.left = random.randint(100, 500)
         self.rect.top = random.randint(100, 500)
         # 显示食物
-        self.exist = True
+        self.being = True
 

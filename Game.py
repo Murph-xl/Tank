@@ -7,6 +7,7 @@ import food
 import tanks
 import home
 from pygame.locals import *
+from Boom import *
 # 主函数
 from interface import show_switch_stage, show_start_interface, show_select_interface
 
@@ -54,8 +55,8 @@ def main():
 		skin.append(skin_num2)
 
 	# 关卡
-	stage = 0
-	num_stage = 2
+	stage =0
+	num_stage = 5
 	# 游戏是否结束
 	is_gameover = False
 	# 时钟
@@ -216,6 +217,22 @@ def main():
 					if music:
 						fire_sound.play()
 					tank_player1.shoot()
+			elif key_pressed[pygame.K_i]:
+				num=0
+				for mine in tank_player1.mines:
+					if mine.active:
+						num += 1
+				tank_player1.fire_mine()
+				# tank_player1.display(screen,delay=1)
+				print("123")
+				for mine in tank_player1.mines:
+					if mine.active:
+						num -= 1
+				map_stage.mineGroup.add(tank_player1.mines)
+
+
+
+
 			# 玩家二
 			# ↑↓←→ -> 上下左右
 			# 小键盘0键射击
@@ -245,6 +262,18 @@ def main():
 						if music:
 							fire_sound.play()
 						tank_player2.shoot()
+				elif key_pressed[pygame.K_3]:
+					num = 0
+					for mine in tank_player2.mines:
+						if mine.active:
+							num += 1
+					tank_player2.fire_mine()
+					# tank_player1.display(screen,delay=1)
+					print("123")
+					for mine in tank_player2.mines:
+						if mine.active:
+							num -= 1
+					map_stage.mineGroup.add(tank_player2.mines)
 			# 背景
 			screen.blit(bar_img, (0, 0))
 			screen.blit(bg_img, (0, 50))
@@ -269,7 +298,7 @@ def main():
 
 			if num_player > 1:
 				screen.blit(play2, p2rect)  # 贴上玩家2
-				play2_score = font_bar.render(str(tank_player2.life), True, (255, 255, 255))  # 玩家2得分
+				play2_score = font_bar.render(str(tank_player2.score), True, (255, 255, 255))  # 玩家2得分
 				screen.blit(play2_score, p2rect_score)  #贴上玩家2得分
 				play2_life = font_bar.render(str(tank_player2.life), True, (255, 255, 255))  # 玩家2生命
 				screen.blit(play2_life, p2rect_life)  # 贴上玩家2生命
@@ -497,6 +526,44 @@ def main():
 					tanksGroup.remove(each)
 			# 家
 			screen.blit(myhome.home, myhome.rect)
+			# 炸弹
+			tanksGroup = pygame.sprite.Group()
+			# 所有 地雷碰撞(地形,坦克)情况
+			all_active_mines = []
+			all_active_mines1 = []
+			all_active_mines2 = []
+			boom_images = []
+			for mine in tank_player1.mines:
+				all_active_mines1.append(mine)
+				all_active_mines.append(mine)
+			if num_player > 1:
+				for mine in tank_player2.mines:
+					all_active_mines2.append(mine)
+					all_active_mines.append(mine)
+
+			for mine in all_active_mines:
+				if mine.active:
+					screen.blit(mine.image_mine, mine.rect)
+					enemy_group = None
+					if mine.owner == 1:
+						enemy_group = enemytanksGroup
+					elif mine.owner == 2:
+						enemy_group = enemytanksGroup
+
+					collide_enemy_tanks = pygame.sprite.spritecollide(mine, enemy_group, True)
+					for enemy_tank in collide_enemy_tanks:
+						if mine in all_active_mines1:
+							tank_player1.score+=20
+						else:
+							tank_player2.score+=20
+						enemytanks_now -= 1
+						enemytanks_dead += 1
+						tanksGroup.remove(enemy_tank)
+						boom_image = Tank_boom()
+						boom_image.rect.center = enemy_tank.rect.center
+						boom_images.append(boom_image)
+						mine.active = False
+				# self.boom_enemy.play()
 			# 食物
 			for myfood in myfoodsGroup:
 				if myfood.exist and myfood.exist_time > 0:

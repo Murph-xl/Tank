@@ -1,5 +1,6 @@
 import pygame
 import random
+import scene
 from bullet import Bullet
 from mine import Mine
 
@@ -36,8 +37,11 @@ class myTank(pygame.sprite.Sprite):
         self.protected_mask2 = self.protected_mask.subsurface((48, 0), (48, 48))
         # 坦克方向
         self.direction_x, self.direction_y = 0, -1
+<<<<<<< HEAD
         # 生成自己的地雷
         self.generate_mine()
+=======
+>>>>>>> e81af93b2ec49e86dccbef22a23fee9793d81d1f
         # 不同玩家的出生位置不同
         if player == 1:
             self.rect.left, self.rect.top = 3 + 24 * 8, 3 + 24 * 24 + 50
@@ -56,11 +60,14 @@ class myTank(pygame.sprite.Sprite):
         # 子弹
         self.bullet = Bullet()
 
+<<<<<<< HEAD
     def set_mine(self):
         self.mine_obj = Mine()
         self.mine_obj.image_mine = pygame.image.load('./images/others/mine.png')
         self.mine_obj.being = True
 
+=======
+>>>>>>> e81af93b2ec49e86dccbef22a23fee9793d81d1f
     # 射击
     def shoot(self):
         self.bullet.being = True
@@ -94,6 +101,39 @@ class myTank(pygame.sprite.Sprite):
         else:
             raise ValueError('myTank class -> level value error.')
 
+<<<<<<< HEAD
+=======
+    # 放置砖块
+    def set_brick(self):
+        self.brick_obj = scene.Brick()
+        self.brick_obj.brick = pygame.image.load('./images/scene/brick.png')
+        self.brick_obj.being = True
+        self.brick_obj.turn(self.direction_x, self.direction_y)
+        if self.direction_x == 0 and self.direction_y == -1:
+            self.brick_obj.rect.left = self.rect.left
+            self.brick_obj.rect.bottom = self.rect.top
+        elif self.direction_x == 0 and self.direction_y == 1:
+            self.brick_obj.rect.left = self.rect.left
+            self.brick_obj.rect.top = self.rect.bottom
+        elif self.direction_x == -1 and self.direction_y == 0:
+            self.brick_obj.rect.right = self.rect.left
+            self.brick_obj.rect.top = self.rect.top
+        elif self.direction_x == 1 and self.direction_y == 0:
+            self.brick_obj.rect.left = self.rect.right
+            self.brick_obj.rect.top = self.rect.top
+
+    # 放置树
+    def set_tree(self):
+        self.tree_obj = scene.Tree()
+        self.tree_obj.tree = pygame.image.load('./images/scene/tree1.jpg')
+        self.tree_obj.being = True
+
+        self.tree_obj.rect.left = self.rect.left
+        self.tree_obj.rect.top = self.rect.top
+        self.tree_obj.rect.right = self.rect.right
+        self.tree_obj.rect.bottom = self.rect.bottom
+
+>>>>>>> e81af93b2ec49e86dccbef22a23fee9793d81d1f
     # 等级提升
     def up_level(self):
         if self.level < 3:
@@ -221,6 +261,7 @@ class myTank(pygame.sprite.Sprite):
             is_move = False
         return is_move
 
+<<<<<<< HEAD
     def generate_mine(self):
         self.mines = []
         # self.mines.image_mine
@@ -258,6 +299,8 @@ class myTank(pygame.sprite.Sprite):
                     mine.active = True
                 break
 
+=======
+>>>>>>> e81af93b2ec49e86dccbef22a23fee9793d81d1f
     # 死后重置
     def reset(self):
         self.level = 0

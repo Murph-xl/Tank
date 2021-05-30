@@ -1,5 +1,4 @@
 import sys
-
 import pygame
 import scene
 import bullet
@@ -189,6 +188,7 @@ def main():
 						sys.exit()
 			# 检查用户键盘操作
 			key_pressed = pygame.key.get_pressed()
+
 			# 玩家一
 			# WSAD -> 上下左右
 			# 空格键射击
@@ -217,6 +217,7 @@ def main():
 					if music:
 						fire_sound.play()
 					tank_player1.shoot()
+<<<<<<< HEAD
 			elif key_pressed[pygame.K_i]:
 				num=0
 				for mine in tank_player1.mines:
@@ -232,6 +233,14 @@ def main():
 
 
 
+=======
+			elif key_pressed[pygame.K_g]:
+				tank_player1.set_brick()
+				map_stage.brickGroup.add(tank_player1.brick_obj)
+			elif key_pressed[pygame.K_h]:
+				tank_player1.set_tree()
+				map_stage.treeGroup.add(tank_player1.tree_obj)
+>>>>>>> e81af93b2ec49e86dccbef22a23fee9793d81d1f
 
 			# 玩家二
 			# ↑↓←→ -> 上下左右
@@ -262,6 +271,7 @@ def main():
 						if music:
 							fire_sound.play()
 						tank_player2.shoot()
+<<<<<<< HEAD
 				elif key_pressed[pygame.K_3]:
 					num = 0
 					for mine in tank_player2.mines:
@@ -274,6 +284,15 @@ def main():
 						if mine.active:
 							num -= 1
 					map_stage.mineGroup.add(tank_player2.mines)
+=======
+				elif key_pressed[pygame.K_2]:
+					tank_player2.set_brick()
+					map_stage.brickGroup.add(tank_player2.brick_obj)
+				elif key_pressed[pygame.K_3]:
+					tank_player2.set_tree()
+					map_stage.treeGroup.add(tank_player2.tree_obj)
+
+>>>>>>> e81af93b2ec49e86dccbef22a23fee9793d81d1f
 			# 背景
 			screen.blit(bar_img, (0, 0))
 			screen.blit(bg_img, (0, 50))
@@ -321,6 +340,7 @@ def main():
 			if time == 5:
 				time = 0
 				is_switch_tank = not is_switch_tank
+
 			# 我方坦克
 			if tank_player1 in mytanksGroup:
 				if is_switch_tank and player1_moving:
@@ -566,9 +586,9 @@ def main():
 				# self.boom_enemy.play()
 			# 食物
 			for myfood in myfoodsGroup:
-				if myfood.exist and myfood.exist_time > 0:
+				if myfood.being and myfood.time > 0:
 					screen.blit(myfood.food, myfood.rect)
-					myfood.exist_time -= 1
+					myfood.time -= 1
 					for tank_player in mytanksGroup:
 						if pygame.sprite.collide_rect(tank_player, myfood):
 							tank_player.score += 10

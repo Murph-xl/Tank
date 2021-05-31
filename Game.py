@@ -45,12 +45,9 @@ def main():
     num_player = show_start_interface(screen, 630, 680)
     # 播放游戏开始的音乐
     start_sound.play()
-    skin = []
     skin_num1 = show_select_interface(screen, 630, 680, 1)
-    skin.append(skin_num1)
     if num_player > 1:
         skin_num2 = show_select_interface(screen, 630, 680, 2)
-        skin.append(skin_num2)
 
     # 关卡
     stage = 0
@@ -98,7 +95,7 @@ def main():
         # 关卡地图
         map_stage = scene.Map(stage)
         # 我方坦克
-        tank_player1 = tanks.myTank(1)
+        tank_player1 = tanks.myTank(1,skin_num1)
         tanksGroup.add(tank_player1)
         mytanksGroup.add(tank_player1)
         play1 = font_bar.render(u'P1 S、L', True, (255, 255, 255))
@@ -111,7 +108,7 @@ def main():
         p1rect_life = play1_life.get_rect()
         p1rect_life.midtop = (520, 50 / 3.7)
         if num_player > 1:
-            tank_player2 = tanks.myTank(2)
+            tank_player2 = tanks.myTank(2,skin_num2)
             tanksGroup.add(tank_player2)
             mytanksGroup.add(tank_player2)
             play2 = font_bar.render(u'P2 S、L', True, (255, 255, 255))
@@ -573,6 +570,7 @@ def main():
                                     add_sound.play()
                                 for tank_player in mytanksGroup:
                                     tank_player.protected = True
+                                    pygame.time.wait(8000)
                             # 坦克升级
                             if myfood.kind == 5:
                                 if music:

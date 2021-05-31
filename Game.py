@@ -6,6 +6,7 @@ import food
 import tanks
 import home
 from pygame.locals import *
+from Boom import *
 # 主函数
 from interface import show_switch_stage, show_start_interface, show_select_interface
 
@@ -37,21 +38,27 @@ def main():
     fire_sound.set_volume(1)
     Gunfire_sound = pygame.mixer.Sound("./audios/Gunfire.wav")
     Gunfire_sound.set_volume(1)
-    hit_sound = pygame.mixer.Sound("./audios/hit.wav")
+    hit_sound = pygame.mixer.Sound("./audios/biubiubiu.wav")
     hit_sound.set_volume(1)
-    start_sound = pygame.mixer.Sound("./audios/start.wav")
+    start_sound = pygame.mixer.Sound("./audios/bg.wav")
     start_sound.set_volume(1)
+    end_sound = pygame.mixer.Sound("./audios/end.wav")
+    end_sound.set_volume(1)
+
     # 开始界面
     num_player = show_start_interface(screen, 630, 680)
     # 播放游戏开始的音乐
     start_sound.play()
+    skin = []
     skin_num1 = show_select_interface(screen, 630, 680, 1)
+    skin.append(skin_num1)
     if num_player > 1:
         skin_num2 = show_select_interface(screen, 630, 680, 2)
+        skin.append(skin_num2)
 
     # 关卡
-    stage = 0
-    num_stage = 2
+    stage = 2
+    num_stage = 6
     # 游戏是否结束
     is_gameover = False
     # 时钟
@@ -81,6 +88,8 @@ def main():
         mybulletsGroup = pygame.sprite.Group()
         enemybulletsGroup = pygame.sprite.Group()
         myfoodsGroup = pygame.sprite.Group()
+        # treeGroup = pygame.sprite.Group()
+        # riverGroup = pygame.sprite.Group()
 
         # 自定义事件
         # 	-生成敌方坦克事件
@@ -94,8 +103,9 @@ def main():
         pygame.time.set_timer(noprotectMytankEvent, 8000)
         # 关卡地图
         map_stage = scene.Map(stage)
+        map_stage.mineGroup = pygame.sprite.Group()
         # 我方坦克
-        tank_player1 = tanks.myTank(1,skin_num1)
+        tank_player1 = tanks.myTank(1, skin_num1)
         tanksGroup.add(tank_player1)
         mytanksGroup.add(tank_player1)
         play1 = font_bar.render(u'P1 S、L', True, (255, 255, 255))
@@ -108,7 +118,7 @@ def main():
         p1rect_life = play1_life.get_rect()
         p1rect_life.midtop = (520, 50 / 3.7)
         if num_player > 1:
-            tank_player2 = tanks.myTank(2,skin_num2)
+            tank_player2 = tanks.myTank(2, skin_num2)
             tanksGroup.add(tank_player2)
             mytanksGroup.add(tank_player2)
             play2 = font_bar.render(u'P2 S、L', True, (255, 255, 255))
@@ -184,13 +194,13 @@ def main():
                                 enemytanksGroup.add(enemytank)
                                 enemytanks_now += 1
                                 enemytanks_total -= 1
-                elif event.type == recoverEnemyEvent:
+                if event.type == recoverEnemyEvent:
                     for each in enemytanksGroup:
                         each.can_move = True
-                elif event.type == noprotectMytankEvent:
+                if event.type == noprotectMytankEvent:
                     for each in mytanksGroup:
                         mytanksGroup.protected = False
-                elif event.type == pygame.KEYDOWN:
+                if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE or event.key == pygame.K_q:
                         sys.exit()
             # 检查用户键盘操作
@@ -201,22 +211,22 @@ def main():
             # 空格键射击
             if key_pressed[pygame.K_w]:
                 tanksGroup.remove(tank_player1)
-                tank_player1.move_up(tanksGroup, map_stage.brickGroup, map_stage.ironGroup, myhome)
+                tank_player1.move_up(tanksGroup, map_stage.brickGroup, map_stage.ironGroup, myhome,map_stage.riverGroup,map_stage.treeGroup)
                 tanksGroup.add(tank_player1)
                 player1_moving = True
             elif key_pressed[pygame.K_s]:
                 tanksGroup.remove(tank_player1)
-                tank_player1.move_down(tanksGroup, map_stage.brickGroup, map_stage.ironGroup, myhome)
+                tank_player1.move_down(tanksGroup,map_stage.brickGroup, map_stage.ironGroup, myhome,map_stage.riverGroup,map_stage.treeGroup)
                 tanksGroup.add(tank_player1)
                 player1_moving = True
             elif key_pressed[pygame.K_a]:
                 tanksGroup.remove(tank_player1)
-                tank_player1.move_left(tanksGroup, map_stage.brickGroup, map_stage.ironGroup, myhome)
+                tank_player1.move_left(tanksGroup,map_stage.brickGroup, map_stage.ironGroup, myhome,map_stage.riverGroup,map_stage.treeGroup)
                 tanksGroup.add(tank_player1)
                 player1_moving = True
             elif key_pressed[pygame.K_d]:
                 tanksGroup.remove(tank_player1)
-                tank_player1.move_right(tanksGroup, map_stage.brickGroup, map_stage.ironGroup, myhome)
+                tank_player1.move_right(tanksGroup,map_stage.brickGroup, map_stage.ironGroup, myhome,map_stage.riverGroup,map_stage.treeGroup)
                 tanksGroup.add(tank_player1)
                 player1_moving = True
             elif key_pressed[pygame.K_SPACE]:
@@ -230,6 +240,18 @@ def main():
             elif key_pressed[pygame.K_h]:
                 tank_player1.set_tree()
                 map_stage.treeGroup.add(tank_player1.tree_obj)
+            elif key_pressed[pygame.K_i]:
+                num = 0
+                for mine in tank_player1.mines:
+                    if mine.active:
+                        num += 1
+                tank_player1.fire_mine()
+                # tank_player1.display(screen,delay=1)
+                print("123")
+                for mine in tank_player1.mines:
+                    if mine.active:
+                        num -= 1
+                map_stage.mineGroup.add(tank_player1.mines)
 
             # 玩家二
             # ↑↓←→ -> 上下左右
@@ -237,22 +259,22 @@ def main():
             if num_player > 1:
                 if key_pressed[pygame.K_UP]:
                     tanksGroup.remove(tank_player2)
-                    tank_player2.move_up(tanksGroup, map_stage.brickGroup, map_stage.ironGroup, myhome)
+                    tank_player2.move_up(tanksGroup,map_stage.brickGroup, map_stage.ironGroup, myhome,map_stage.riverGroup,map_stage.treeGroup)
                     tanksGroup.add(tank_player2)
                     player2_moving = True
                 elif key_pressed[pygame.K_DOWN]:
                     tanksGroup.remove(tank_player2)
-                    tank_player2.move_down(tanksGroup, map_stage.brickGroup, map_stage.ironGroup, myhome)
+                    tank_player2.move_down(tanksGroup,map_stage.brickGroup, map_stage.ironGroup, myhome,map_stage.riverGroup,map_stage.treeGroup)
                     tanksGroup.add(tank_player2)
                     player2_moving = True
                 elif key_pressed[pygame.K_LEFT]:
                     tanksGroup.remove(tank_player2)
-                    tank_player2.move_left(tanksGroup, map_stage.brickGroup, map_stage.ironGroup, myhome)
+                    tank_player2.move_left(tanksGroup,map_stage.brickGroup, map_stage.ironGroup, myhome,map_stage.riverGroup,map_stage.treeGroup)
                     tanksGroup.add(tank_player2)
                     player2_moving = True
                 elif key_pressed[pygame.K_RIGHT]:
                     tanksGroup.remove(tank_player2)
-                    tank_player2.move_right(tanksGroup, map_stage.brickGroup, map_stage.ironGroup, myhome)
+                    tank_player2.move_right(tanksGroup,map_stage.brickGroup, map_stage.ironGroup, myhome,map_stage.riverGroup,map_stage.treeGroup)
                     tanksGroup.add(tank_player2)
                     player2_moving = True
                 elif key_pressed[pygame.K_KP0]:
@@ -260,12 +282,24 @@ def main():
                         if music:
                             fire_sound.play()
                         tank_player2.shoot()
-                elif key_pressed[pygame.K_2]:
+                elif key_pressed[pygame.K_KP1]:
                     tank_player2.set_brick()
                     map_stage.brickGroup.add(tank_player2.brick_obj)
-                elif key_pressed[pygame.K_3]:
+                elif key_pressed[pygame.K_KP2]:
                     tank_player2.set_tree()
                     map_stage.treeGroup.add(tank_player2.tree_obj)
+                elif key_pressed[pygame.K_KP3]:
+                    num = 0
+                    for mine in tank_player2.mines:
+                        if mine.active:
+                            num += 1
+                    tank_player2.fire_mine()
+                    # tank_player1.display(screen,delay=1)
+                    print("123")
+                    for mine in tank_player2.mines:
+                        if mine.active:
+                            num -= 1
+                    map_stage.mineGroup.add(tank_player2.mines)
 
             # 背景
             screen.blit(bar_img, (0, 0))
@@ -367,7 +401,7 @@ def main():
                         screen.blit(each.tank_1, (each.rect.left, each.rect.top))
                     if each.can_move:
                         tanksGroup.remove(each)
-                        each.move(tanksGroup, map_stage.brickGroup, map_stage.ironGroup, myhome)
+                        each.move(tanksGroup,map_stage.brickGroup, map_stage.ironGroup, myhome,map_stage.riverGroup,map_stage.treeGroup)
                         tanksGroup.add(each)
 
             # 我方子弹
@@ -455,6 +489,7 @@ def main():
                         tank_player.bullet.being = False
                         myhome.set_dead()
                         is_gameover = True
+                        end_sound.play()
             # 敌方子弹
             for each in enemytanksGroup:
                 if each.being:
@@ -490,6 +525,7 @@ def main():
                                             tanksGroup.remove(tank_player)
                                             if len(mytanksGroup) < 1:
                                                 is_gameover = True
+                                                end_sound.play()
                                         else:
                                             tank_player.reset()
                                     each.bullet.being = False
@@ -530,11 +566,54 @@ def main():
                                 each.bullet.being = False
                                 myhome.set_dead()
                                 is_gameover = True
+                                end_sound.play()
                 else:
                     enemytanksGroup.remove(each)
                     tanksGroup.remove(each)
             # 家
             screen.blit(myhome.home, myhome.rect)
+
+            # 所有 地雷碰撞(地形,坦克)情况
+            all_active_mines = []
+            all_active_mines1 = []
+            all_active_mines2 = []
+            mine_images = []
+            for mine in tank_player1.mines:
+                all_active_mines1.append(mine)
+                all_active_mines.append(mine)
+            if num_player > 1:
+                for mine in tank_player2.mines:
+                    all_active_mines2.append(mine)
+                    all_active_mines.append(mine)
+
+            for mine in all_active_mines:
+                if mine.active:
+                    screen.blit(mine.image_mine, mine.rect)
+                    enemy_group = None
+                    if mine.owner == 1:
+                        enemy_group = enemytanksGroup
+                    elif mine.owner == 2:
+                        enemy_group = enemytanksGroup
+
+                    collide_enemy_tanks = pygame.sprite.spritecollide(mine, enemy_group, True)
+                    for enemy_tank in collide_enemy_tanks:
+                        if mine in all_active_mines1:
+                            # 爆炸特效
+                            i = 0
+                            while i < 500:
+                                screen.blit(boom_images[int(i / 100)], mine.rect)
+                                i += 1
+                            tank_player1.score += 20
+                        else:
+                            tank_player2.score += 20
+                        enemytanks_now -= 1
+                        enemytanks_dead += 1
+                        tanksGroup.remove(enemy_tank)
+                        mine_image = Tank_boom()
+                        mine_image.rect.center = enemy_tank.rect.center
+                        mine_images.append(mine_image)
+                        mine.active = False
+            # self.boom_enemy.play()
             # 食物
             for myfood in myfoodsGroup:
                 if myfood.being and myfood.time > 0:
@@ -571,6 +650,7 @@ def main():
                                 for tank_player in mytanksGroup:
                                     tank_player.protected = True
                                     pygame.time.wait(8000)
+                                    tank_player.protected = False
                             # 坦克升级
                             if myfood.kind == 5:
                                 if music:
@@ -605,8 +685,8 @@ def main():
 
 # 结束界面显示
 def show_end_interface(screen, width, height, is_win):
-    bg_img = pygame.image.load("./images/others/background.png")
-    screen.blit(bg_img, (0, 50))
+    #bg_img = pygame.image.load("images/others/background.png")
+    #screen.blit(bg_img, (0, 50))
     font = pygame.font.Font('./font/simkai.ttf', width // 10)
     if is_win:
         content = font.render(u'恭喜通关！', True, (255, 0, 0))  # 添加游戏分数字样
@@ -614,14 +694,12 @@ def show_end_interface(screen, width, height, is_win):
         rect.midtop = (width / 2, height / 2)
         screen.blit(content, rect)
     else:
-        fail_img = pygame.image.load("./images/others/gameover.png")
-        rect = fail_img.get_rect()
-        rect.midtop = (width / 2, height / 2)
-        screen.blit(fail_img, rect)
+        fail_img = pygame.image.load("./images/others/over.png")
+        screen.blit(fail_img, (0,0))
     font2 = pygame.font.Font('./font/simkai.ttf', width // 28)
-    restart = font2.render(u'按R键重新开始...', True, (255, 0, 0))
+    restart = font2.render(u'按R键重新开始...', True, (159, 103, 34))
     restartrect = restart.get_rect()
-    restartrect.midtop = (width / 1.8, height / 1.5)
+    restartrect.midtop = (width / 2, height / 1.5)
     screen.blit(restart, restartrect)
     pygame.display.update()
 
@@ -632,6 +710,8 @@ def show_end_interface(screen, width, height, is_win):
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_r:
                     main()
+                if event.key == pygame.K_ESCAPE or event.key == pygame.K_q:
+                    sys.exit() # 退出系统
 
 
 if __name__ == '__main__':

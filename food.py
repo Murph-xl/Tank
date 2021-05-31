@@ -48,7 +48,7 @@ class Food(pg.sprite.Sprite):
         self.kind = random.randint(0, 8)
         # 根据序号加载食物图像
         self.food = pg.image.load(self.foods[self.kind]).convert_alpha()
-        # 设置食物大小
+        # 设置食物位置
         self.rect = self.food.get_rect()
         self.rect.left = random.randint(100, 500)
         self.rect.top = random.randint(100, 500)

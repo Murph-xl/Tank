@@ -2,6 +2,7 @@ import pygame
 import random
 import scene
 from bullet import Bullet
+from mine import Mine
 
 
 # 我方坦克类
@@ -37,8 +38,8 @@ class myTank(pygame.sprite.Sprite):
         self.level = 0
         # 载入(两个tank是为了轮子特效)
         self.tank = pygame.image.load(self.tanks[self.level]).convert_alpha()
-        self.tank_0 = self.tank.subsurface((0, 0), (48, 48))
-        self.tank_1 = self.tank.subsurface((48, 0), (48, 48))
+        self.tank_0 = self.tank.subsurface((0, 0), (42, 42))
+        self.tank_1 = self.tank.subsurface((53, 0), (42, 42))
         self.rect = self.tank_0.get_rect()
         # 坦克游戏时长
         self.time = 0
@@ -50,6 +51,10 @@ class myTank(pygame.sprite.Sprite):
         self.protected_mask2 = self.protected_mask.subsurface((48, 0), (48, 48))
         # 坦克方向
         self.direction_x, self.direction_y = 0, -1
+
+        # 生成自己的地雷
+        self.generate_mine()
+
         # 不同玩家的出生位置不同
         if player == 1:
             self.rect.left, self.rect.top = 3 + 24 * 8, 3 + 24 * 24 + 50
@@ -67,6 +72,11 @@ class myTank(pygame.sprite.Sprite):
         self.protected = False
         # 子弹
         self.bullet = Bullet()
+
+    def set_mine(self):
+        self.mine_obj = Mine()
+        self.mine_obj.image_mine = pygame.image.load('./images/others/mine.png')
+        self.mine_obj.being = True
 
     # 射击
     def shoot(self):
@@ -147,7 +157,7 @@ class myTank(pygame.sprite.Sprite):
         self.tank = pygame.image.load(self.tanks[self.level]).convert_alpha()
 
     # 向上
-    def move_up(self, tankGroup, brickGroup, ironGroup, myhome):
+    def move_up(self, tankGroup, brickGroup, ironGroup, myhome,riverGroup,treeGroup):
         self.direction_x, self.direction_y = 0, -1
         # 先移动后判断
         self.rect = self.rect.move(self.speed * self.direction_x, self.speed * self.direction_y)
@@ -164,6 +174,12 @@ class myTank(pygame.sprite.Sprite):
                 pygame.sprite.spritecollide(self, ironGroup, False, None):
             self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
             is_move = False
+        # 撞河流
+        if pygame.sprite.spritecollide(self, riverGroup, False, None) or \
+                pygame.sprite.spritecollide(self, ironGroup, False, None):
+            self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
+            is_move = False
+
         # 撞其他坦克
         if pygame.sprite.spritecollide(self, tankGroup, False, None):
             self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
@@ -175,7 +191,7 @@ class myTank(pygame.sprite.Sprite):
         return is_move
 
     # 向下
-    def move_down(self, tankGroup, brickGroup, ironGroup, myhome):
+    def move_down(self, tankGroup, brickGroup, ironGroup,  myhome,riverGroup,treeGroup):
         self.direction_x, self.direction_y = 0, 1
         # 先移动后判断
         self.rect = self.rect.move(self.speed * self.direction_x, self.speed * self.direction_y)
@@ -192,6 +208,11 @@ class myTank(pygame.sprite.Sprite):
                 pygame.sprite.spritecollide(self, ironGroup, False, None):
             self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
             is_move = False
+        # 撞石头/钢墙
+        if pygame.sprite.spritecollide(self, riverGroup, False, None) or \
+                pygame.sprite.spritecollide(self, ironGroup, False, None):
+            self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
+            is_move = False
         # 撞其他坦克
         if pygame.sprite.spritecollide(self, tankGroup, False, None):
             self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
@@ -203,7 +224,7 @@ class myTank(pygame.sprite.Sprite):
         return is_move
 
     # 向左
-    def move_left(self, tankGroup, brickGroup, ironGroup, myhome):
+    def move_left(self, tankGroup, brickGroup, ironGroup,  myhome,riverGroup,treeGroup):
         self.direction_x, self.direction_y = -1, 0
         # 先移动后判断
         self.rect = self.rect.move(self.speed * self.direction_x, self.speed * self.direction_y)
@@ -220,6 +241,11 @@ class myTank(pygame.sprite.Sprite):
                 pygame.sprite.spritecollide(self, ironGroup, False, None):
             self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
             is_move = False
+        # 撞河流
+        if pygame.sprite.spritecollide(self, riverGroup, False, None) or \
+                pygame.sprite.spritecollide(self, ironGroup, False, None):
+            self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
+            is_move = False
         # 撞其他坦克
         if pygame.sprite.spritecollide(self, tankGroup, False, None):
             self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
@@ -231,7 +257,7 @@ class myTank(pygame.sprite.Sprite):
         return is_move
 
     # 向右
-    def move_right(self, tankGroup, brickGroup, ironGroup, myhome):
+    def move_right(self, tankGroup, brickGroup, ironGroup,  myhome,riverGroup,treeGroup):
         self.direction_x, self.direction_y = 1, 0
         # 先移动后判断
         self.rect = self.rect.move(self.speed * self.direction_x, self.speed * self.direction_y)
@@ -248,6 +274,11 @@ class myTank(pygame.sprite.Sprite):
                 pygame.sprite.spritecollide(self, ironGroup, False, None):
             self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
             is_move = False
+        # 撞河流
+        if pygame.sprite.spritecollide(self, riverGroup, False, None) or \
+                pygame.sprite.spritecollide(self, ironGroup, False, None):
+            self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
+            is_move = False
         # 撞其他坦克
         if pygame.sprite.spritecollide(self, tankGroup, False, None):
             self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
@@ -257,6 +288,43 @@ class myTank(pygame.sprite.Sprite):
             self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
             is_move = False
         return is_move
+
+    def generate_mine(self):
+        self.mines = []
+        # self.mines.image_mine
+        for i in range(100):
+            self.mines.append(Mine())
+
+    # 在屏幕的显示
+    # def display(self, screen, delay):
+    # 	# 显示地雷
+    # 	for mine in self.mines:
+    # 		if mine.active:
+    # 			screen.blit(mine.image_mine, mine.rect)
+
+    # self.guard.rect.center = self.rect.center1
+    # self.guard.display(screen)
+    #
+    # if self.star_initial.is_completed() is False:
+    # 	self.display_star(screen)
+    # 	return
+    # if delay % 2 == 0:
+    # 	self.delayed ^= 1
+    # screen.blit(self.cache_image[self.delayed], self.rect)
+
+    def fire_mine(self):
+        # 不会和原来的 地雷重合
+        all_mines = pygame.sprite.Group()
+        for mine in self.mines:
+            if mine.active:
+                all_mines.add(mine)
+
+        for mine in self.mines:
+            if not mine.active:
+                mine.rect.center = self.rect.center
+                if len(pygame.sprite.spritecollide(mine, all_mines, False)) == 0:
+                    mine.active = True
+                break
 
     # 死后重置
     def reset(self):
@@ -324,7 +392,7 @@ class enemyTank(pygame.sprite.Sprite):
         # 坦克是否可以行动
         self.can_move = True
         # 坦克速度
-        self.speed = max(3 - self.kind, 1)
+        self.speed = max(2 - self.kind, 1)     #old : 0-3  3,2,1,1           now 0-3 2，1，1，1
         # 方向
         self.direction_x, self.direction_y = 0, 1
         # 是否存活
@@ -352,7 +420,7 @@ class enemyTank(pygame.sprite.Sprite):
             raise ValueError('enemyTank class -> direction value error.')
 
     # 随机移动
-    def move(self, tankGroup, brickGroup, ironGroup, myhome):
+    def move(self, tankGroup, brickGroup, ironGroup,  myhome,riverGroup,treeGroup):
         self.rect = self.rect.move(self.speed * self.direction_x, self.speed * self.direction_y)
         is_move = True
         if self.direction_x == 0 and self.direction_y == -1:
@@ -387,7 +455,8 @@ class enemyTank(pygame.sprite.Sprite):
             raise ValueError('enemyTank class -> direction value error.')
         if pygame.sprite.spritecollide(self, brickGroup, False, None) \
                 or pygame.sprite.spritecollide(self, ironGroup, False, None) \
-                or pygame.sprite.spritecollide(self, tankGroup, False, None):
+                or pygame.sprite.spritecollide(self, tankGroup, False, None)\
+                or pygame.sprite.spritecollide(self, riverGroup, False, None):
             self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
             self.direction_x, self.direction_y = random.choice(([0, 1], [0, -1], [1, 0], [-1, 0]))
             is_move = False

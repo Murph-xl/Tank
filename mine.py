@@ -27,4 +27,4 @@ class Mine(pygame.sprite.Sprite):
         self.active = False
 
     def load_image(self):
-        self.image_mine = pygame.image.load("images/others/mine.png").convert_alpha()
+        self.image_mine = pygame.image.load("./images/others/mine.png").convert_alpha()

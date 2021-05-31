@@ -98,6 +98,7 @@ def main():
 		pygame.time.set_timer(noprotectMytankEvent, 8000)
 		# 关卡地图
 		map_stage = scene.Map(stage)
+		map_stage.mineGroup = pygame.sprite.Group()
 		# 我方坦克
 		tank_player1 = tanks.myTank(1)
 		tanksGroup.add(tank_player1)
@@ -145,6 +146,18 @@ def main():
 		appearances.append(appearance_img.subsurface((0, 0), (48, 48)))
 		appearances.append(appearance_img.subsurface((48, 0), (48, 48)))
 		appearances.append(appearance_img.subsurface((96, 0), (48, 48)))
+
+		# 爆炸特效
+		boom_img = pygame.image.load("./images/others/boom_dynamic.png").convert_alpha()
+		boom_imgs = []
+		boom_imgs.append(boom_img.subsurface((0, 0),(48, 48)))
+		boom_imgs.append(boom_img.subsurface((48, 0), (48, 48)))
+		boom_imgs.append(boom_img.subsurface((96, 0), (48, 48)))
+		boom_imgs.append(boom_img.subsurface((144, 0), (48, 48)))
+		boom_imgs.append(boom_img.subsurface((192, 0), (48, 48)))
+		boom_imgs.append(boom_img.subsurface((240, 0), (48, 48)))
+
+
 
 		# 关卡主循环
 		while True:
@@ -217,7 +230,6 @@ def main():
 					if music:
 						fire_sound.play()
 					tank_player1.shoot()
-<<<<<<< HEAD
 			elif key_pressed[pygame.K_i]:
 				num=0
 				for mine in tank_player1.mines:
@@ -232,15 +244,12 @@ def main():
 				map_stage.mineGroup.add(tank_player1.mines)
 
 
-
-=======
 			elif key_pressed[pygame.K_g]:
 				tank_player1.set_brick()
 				map_stage.brickGroup.add(tank_player1.brick_obj)
 			elif key_pressed[pygame.K_h]:
 				tank_player1.set_tree()
 				map_stage.treeGroup.add(tank_player1.tree_obj)
->>>>>>> e81af93b2ec49e86dccbef22a23fee9793d81d1f
 
 			# 玩家二
 			# ↑↓←→ -> 上下左右
@@ -271,7 +280,6 @@ def main():
 						if music:
 							fire_sound.play()
 						tank_player2.shoot()
-<<<<<<< HEAD
 				elif key_pressed[pygame.K_3]:
 					num = 0
 					for mine in tank_player2.mines:
@@ -284,7 +292,6 @@ def main():
 						if mine.active:
 							num -= 1
 					map_stage.mineGroup.add(tank_player2.mines)
-=======
 				elif key_pressed[pygame.K_2]:
 					tank_player2.set_brick()
 					map_stage.brickGroup.add(tank_player2.brick_obj)
@@ -292,7 +299,6 @@ def main():
 					tank_player2.set_tree()
 					map_stage.treeGroup.add(tank_player2.tree_obj)
 
->>>>>>> e81af93b2ec49e86dccbef22a23fee9793d81d1f
 			# 背景
 			screen.blit(bar_img, (0, 0))
 			screen.blit(bg_img, (0, 50))
@@ -394,6 +400,8 @@ def main():
 						tanksGroup.remove(each)
 						each.move(tanksGroup, map_stage.brickGroup, map_stage.ironGroup, myhome)
 						tanksGroup.add(each)
+
+
 			# 我方子弹
 			for tank_player in mytanksGroup:
 				if tank_player.bullet.being:
@@ -405,6 +413,8 @@ def main():
 							if pygame.sprite.collide_rect(tank_player.bullet, each):
 								tank_player.bullet.being = False
 								each.being = False
+								screen.blit(boom_imgs[0], each.rect)
+
 								enemybulletsGroup.remove(each)
 								tank_player.score +=1
 								break

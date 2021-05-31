@@ -571,6 +571,8 @@ def main():
 			for myfood in myfoodsGroup:
 				if myfood.being and myfood.time > 0:
 					screen.blit(myfood.food, myfood.rect)
+					if myfood.kind == 8:
+						screen.blit(myfood.food2, myfood.rect2)
 					myfood.time -= 1
 					for tank_player in mytanksGroup:
 						if pygame.sprite.collide_rect(tank_player, myfood):
@@ -623,6 +625,10 @@ def main():
 								tank_player.speed += 1
 							myfood.being = False
 							myfoodsGroup.remove(myfood)
+							# 坦克碰到传送门
+							if myfood.kind ==9:
+								add_sound.play()
+								tank_player.rect = myfood.rect2
 							break
 				else:
 					myfood.being = False

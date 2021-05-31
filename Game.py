@@ -17,7 +17,7 @@ def main():
 	pygame.mixer.init()
 	screen = pygame.display.set_mode((630, 680), FULLSCREEN)
 	pygame.display.set_caption("坦克大战——哈哈哈")
-	#加载字体
+	# 加载字体
 	font_bar = pygame.font.Font('./font/simkai.ttf', 630 // 40)
 	# 加载图片
 	bg_img = pygame.image.load("./images/others/background.png")
@@ -27,7 +27,7 @@ def main():
 	close_img = pygame.image.load("./images/others/close.png")
 
 	# 加载音效
-	music = True  #默认播放音乐
+	music = True  # 默认播放音乐
 	add_sound = pygame.mixer.Sound("./audios/add.wav")
 	add_sound.set_volume(1)
 	bang_sound = pygame.mixer.Sound("./audios/bang.wav")
@@ -46,20 +46,20 @@ def main():
 	num_player = show_start_interface(screen, 630, 680)
 	# 播放游戏开始的音乐
 	start_sound.play()
-	skin=[]
 	skin_num1 = show_select_interface(screen, 630, 680, 1)
-	skin.append(skin_num1)
-	if num_player >1:
+	if num_player > 1:
 		skin_num2 = show_select_interface(screen, 630, 680, 2)
-		skin.append(skin_num2)
+
 
 	# 关卡
 	stage =0
-	num_stage = 5
+	num_stage = 6
 	# 游戏是否结束
 	is_gameover = False
 	# 时钟
 	clock = pygame.time.Clock()
+
+
 
 	# 主循环
 	while not is_gameover:
@@ -69,9 +69,9 @@ def main():
 			break
 		show_switch_stage(screen, 630, 680, stage)
 		# 该关卡坦克总数量
-		enemytanks_total = min(stage * 18, 80)  #还未出现的总数，会一直减
-		enemytanks_all = enemytanks_total   #总数量，常量
-		enemytanks_dead = 0  #敌方死亡数量
+		enemytanks_total = min(stage * 18, 80)  # 还未出现的总数，会一直减
+		enemytanks_all = enemytanks_total  # 总数量，常量
+		enemytanks_dead = 0  # 敌方死亡数量
 		# 场上存在的敌方坦克总数量
 		enemytanks_now = 0
 		# 场上可以存在的敌方坦克总数量
@@ -86,6 +86,7 @@ def main():
 		enemybulletsGroup = pygame.sprite.Group()
 		myfoodsGroup = pygame.sprite.Group()
 
+
 		# 自定义事件
 		# 	-生成敌方坦克事件
 		genEnemyEvent = pygame.constants.USEREVENT
@@ -98,28 +99,27 @@ def main():
 		pygame.time.set_timer(noprotectMytankEvent, 8000)
 		# 关卡地图
 		map_stage = scene.Map(stage)
-		map_stage.mineGroup = pygame.sprite.Group()
 		# 我方坦克
-		tank_player1 = tanks.myTank(1)
+		tank_player1 = tanks.myTank(1,skin_num1)
 		tanksGroup.add(tank_player1)
 		mytanksGroup.add(tank_player1)
 		play1 = font_bar.render(u'P1 S、L', True, (255, 255, 255))
 		p1rect = play1.get_rect()
 		p1rect.midtop = (830 / 2, 50 / 3.7)
-		play1_score = font_bar.render(str(tank_player1.score), True, (255, 255, 255))  #玩家1得分
+		play1_score = font_bar.render(str(tank_player1.score), True, (255, 255, 255))  # 玩家1得分
 		p1rect_score = play1_score.get_rect()
 		p1rect_score.midtop = (480, 50 / 3.7)
 		play1_life = font_bar.render(str(tank_player1.life), True, (255, 255, 255))  # 玩家1生命
 		p1rect_life = play1_life.get_rect()
 		p1rect_life.midtop = (520, 50 / 3.7)
 		if num_player > 1:
-			tank_player2 = tanks.myTank(2)
+			tank_player2 = tanks.myTank(2,skin_num2)
 			tanksGroup.add(tank_player2)
 			mytanksGroup.add(tank_player2)
 			play2 = font_bar.render(u'P2 S、L', True, (255, 255, 255))
 			p2rect = play2.get_rect()
 			p2rect.midtop = (830 / 2, 50 / 1.6)
-			play2_score = font_bar.render(str(tank_player2.score), True, (255, 255, 255)) #玩家2得分
+			play2_score = font_bar.render(str(tank_player2.score), True, (255, 255, 255))  # 玩家2得分
 			p2rect_score = play2_score.get_rect()
 			p2rect_score.midtop = (480, 50 / 1.6)
 			play2_life = font_bar.render(str(tank_player2.life), True, (255, 255, 255))  # 玩家2生命
@@ -140,6 +140,7 @@ def main():
 				enemytanks_total -= 1
 		# 大本营
 		myhome = home.Home()
+
 		# 出场特效
 		appearance_img = pygame.image.load("./images/others/appear.png").convert_alpha()
 		appearances = []
@@ -148,16 +149,14 @@ def main():
 		appearances.append(appearance_img.subsurface((96, 0), (48, 48)))
 
 		# 爆炸特效
-		boom_img = pygame.image.load("./images/others/boom_dynamic.png").convert_alpha()
-		boom_imgs = []
-		boom_imgs.append(boom_img.subsurface((0, 0),(48, 48)))
-		boom_imgs.append(boom_img.subsurface((48, 0), (48, 48)))
-		boom_imgs.append(boom_img.subsurface((96, 0), (48, 48)))
-		boom_imgs.append(boom_img.subsurface((144, 0), (48, 48)))
-		boom_imgs.append(boom_img.subsurface((192, 0), (48, 48)))
-		boom_imgs.append(boom_img.subsurface((240, 0), (48, 48)))
-
-
+		boom_image = pygame.image.load("./images/others/boom_dynamic.png").convert_alpha()
+		boom_images = []
+		boom_images.append(boom_image.subsurface((0, 0), (48, 48)))
+		boom_images.append(boom_image.subsurface((48, 0), (48, 48)))
+		boom_images.append(boom_image.subsurface((96, 0), (48, 48)))
+		boom_images.append(boom_image.subsurface((144, 0), (48, 48)))
+		boom_images.append(boom_image.subsurface((192, 0), (48, 48)))
+		boom_images.append(boom_image.subsurface((240, 0), (48, 48)))
 
 		# 关卡主循环
 		while True:
@@ -169,10 +168,10 @@ def main():
 				is_gameover = False
 				break
 			for event in pygame.event.get():
-				#鼠标点击音乐图片事件
+				# 鼠标点击音乐图片事件
 				if event.type == pygame.MOUSEBUTTONDOWN:
 					x, y = event.pos
-					if x < 612 and x >580 and y>5 and y < 37:
+					if x < 612 and x > 580 and y > 5 and y < 37:
 						if music:
 							music = False
 							start_sound.stop()
@@ -190,13 +189,13 @@ def main():
 								enemytanksGroup.add(enemytank)
 								enemytanks_now += 1
 								enemytanks_total -= 1
-				if event.type == recoverEnemyEvent:
+				elif event.type == recoverEnemyEvent:
 					for each in enemytanksGroup:
 						each.can_move = True
-				if event.type == noprotectMytankEvent:
+				elif event.type == noprotectMytankEvent:
 					for each in mytanksGroup:
 						mytanksGroup.protected = False
-				if event.type == pygame.KEYDOWN:
+				elif event.type == pygame.KEYDOWN:
 					if event.key == pygame.K_ESCAPE or event.key == pygame.K_q:
 						sys.exit()
 			# 检查用户键盘操作
@@ -229,9 +228,9 @@ def main():
 				if not tank_player1.bullet.being:
 					if music:
 						fire_sound.play()
-					tank_player1.shoot()
+						tank_player1.shoot()
 			elif key_pressed[pygame.K_i]:
-				num=0
+				num = 0
 				for mine in tank_player1.mines:
 					if mine.active:
 						num += 1
@@ -323,8 +322,8 @@ def main():
 
 			if num_player > 1:
 				screen.blit(play2, p2rect)  # 贴上玩家2
-				play2_score = font_bar.render(str(tank_player2.score), True, (255, 255, 255))  # 玩家2得分
-				screen.blit(play2_score, p2rect_score)  #贴上玩家2得分
+				play2_score = font_bar.render(str(tank_player2.life), True, (255, 255, 255))  # 玩家2得分
+				screen.blit(play2_score, p2rect_score)  # 贴上玩家2得分
 				play2_life = font_bar.render(str(tank_player2.life), True, (255, 255, 255))  # 玩家2生命
 				screen.blit(play2_life, p2rect_life)  # 贴上玩家2生命
 			# 石头墙
@@ -365,6 +364,7 @@ def main():
 						screen.blit(tank_player2.tank_1, (tank_player2.rect.left, tank_player2.rect.top))
 					if tank_player2.protected:
 						screen.blit(tank_player1.protected_mask1, (tank_player2.rect.left, tank_player2.rect.top))
+
 			# 敌方坦克
 			for each in enemytanksGroup:
 				# 出生特效
@@ -372,23 +372,23 @@ def main():
 					if each.times > 0:
 						each.times -= 1
 						if each.times <= 10:
-							screen.blit(appearances[2], (3+each.x*12*24, 53))
+							screen.blit(appearances[2], (3 + each.x * 12 * 24, 53))
 						elif each.times <= 20:
-							screen.blit(appearances[1], (3+each.x*12*24, 53))
+							screen.blit(appearances[1], (3 + each.x * 12 * 24, 53))
 						elif each.times <= 30:
-							screen.blit(appearances[0], (3+each.x*12*24, 53))
+							screen.blit(appearances[0], (3 + each.x * 12 * 24, 53))
 						elif each.times <= 40:
-							screen.blit(appearances[2], (3+each.x*12*24, 53))
+							screen.blit(appearances[2], (3 + each.x * 12 * 24, 53))
 						elif each.times <= 50:
-							screen.blit(appearances[1], (3+each.x*12*24, 53))
+							screen.blit(appearances[1], (3 + each.x * 12 * 24, 53))
 						elif each.times <= 60:
-							screen.blit(appearances[0], (3+each.x*12*24, 53))
+							screen.blit(appearances[0], (3 + each.x * 12 * 24, 53))
 						elif each.times <= 70:
-							screen.blit(appearances[2], (3+each.x*12*24, 53))
+							screen.blit(appearances[2], (3 + each.x * 12 * 24, 53))
 						elif each.times <= 80:
-							screen.blit(appearances[1], (3+each.x*12*24, 53))
+							screen.blit(appearances[1], (3 + each.x * 12 * 24, 53))
 						elif each.times <= 90:
-							screen.blit(appearances[0], (3+each.x*12*24, 53))
+							screen.blit(appearances[0], (3 + each.x * 12 * 24, 53))
 					else:
 						each.born = False
 				else:
@@ -401,7 +401,6 @@ def main():
 						each.move(tanksGroup, map_stage.brickGroup, map_stage.ironGroup, myhome)
 						tanksGroup.add(each)
 
-
 			# 我方子弹
 			for tank_player in mytanksGroup:
 				if tank_player.bullet.being:
@@ -412,11 +411,11 @@ def main():
 						if each.being:
 							if pygame.sprite.collide_rect(tank_player.bullet, each):
 								tank_player.bullet.being = False
+								screen.blit(boom_images[0], each.rect)
+								screen.blit(boom_images[1], each.rect)
 								each.being = False
-								screen.blit(boom_imgs[0], each.rect)
-
 								enemybulletsGroup.remove(each)
-								tank_player.score +=1
+								tank_player.score += 1
 								break
 						else:
 							enemybulletsGroup.remove(each)
@@ -435,10 +434,16 @@ def main():
 								if each.blood < 0:
 									if music:
 										bang_sound.play()
+										# 爆炸特效
+										i = 0
+										while i < 500:
+											screen.blit(boom_images[int(i / 100)], each.rect)
+											i += 1
 									each.being = False
 									enemytanksGroup.remove(each)
+
 									enemytanks_now -= 1
-									enemytanks_dead +=1
+									enemytanks_dead += 1
 									tanksGroup.remove(each)
 								else:
 									each.reload()
@@ -498,14 +503,19 @@ def main():
 									if not tank_player.protected:
 										if music:
 											bang_sound.play()
+											# 爆炸特效
+											i = 0
+											while i < 500:
+												screen.blit(boom_images[int(i / 100)], tank_player.rect)
+												i += 1
 										tank_player.life -= 1
-										if tank_player.life <1:
+										if tank_player.life < 1:
 											play1_life = font_bar.render(str(tank_player1.life), True,
 																		 (255, 255, 255))  # 玩家2生命
 											screen.blit(play1_life, p1rect_life)  # 贴上玩家2生命
 											if num_player > 1:
 												play2_life = font_bar.render(str(tank_player2.life), True,
-																		 (255, 255, 255))  # 玩家2生命
+																			 (255, 255, 255))  # 玩家2生命
 												screen.blit(play2_life, p2rect_life)  # 贴上玩家2生命
 											mytanksGroup.remove(tank_player)
 											tanksGroup.remove(tank_player)
@@ -546,6 +556,7 @@ def main():
 										map_stage.ironGroup.remove(one)
 									break
 							'''
+
 							# 子弹碰大本营
 							if pygame.sprite.collide_rect(each.bullet, myhome):
 								each.bullet.being = False
@@ -556,44 +567,6 @@ def main():
 					tanksGroup.remove(each)
 			# 家
 			screen.blit(myhome.home, myhome.rect)
-			# 炸弹
-			tanksGroup = pygame.sprite.Group()
-			# 所有 地雷碰撞(地形,坦克)情况
-			all_active_mines = []
-			all_active_mines1 = []
-			all_active_mines2 = []
-			boom_images = []
-			for mine in tank_player1.mines:
-				all_active_mines1.append(mine)
-				all_active_mines.append(mine)
-			if num_player > 1:
-				for mine in tank_player2.mines:
-					all_active_mines2.append(mine)
-					all_active_mines.append(mine)
-
-			for mine in all_active_mines:
-				if mine.active:
-					screen.blit(mine.image_mine, mine.rect)
-					enemy_group = None
-					if mine.owner == 1:
-						enemy_group = enemytanksGroup
-					elif mine.owner == 2:
-						enemy_group = enemytanksGroup
-
-					collide_enemy_tanks = pygame.sprite.spritecollide(mine, enemy_group, True)
-					for enemy_tank in collide_enemy_tanks:
-						if mine in all_active_mines1:
-							tank_player1.score+=20
-						else:
-							tank_player2.score+=20
-						enemytanks_now -= 1
-						enemytanks_dead += 1
-						tanksGroup.remove(enemy_tank)
-						boom_image = Tank_boom()
-						boom_image.rect.center = enemy_tank.rect.center
-						boom_images.append(boom_image)
-						mine.active = False
-				# self.boom_enemy.play()
 			# 食物
 			for myfood in myfoodsGroup:
 				if myfood.being and myfood.time > 0:
@@ -609,7 +582,7 @@ def main():
 										bang_sound.play()
 								enemytanksGroup = pygame.sprite.Group()
 								enemytanks_total -= enemytanks_now
-								enemytanks_dead+=enemytanks_now
+								enemytanks_dead += enemytanks_now
 								enemytanks_now = 0
 							# 敌人静止
 							if myfood.kind == 1:
@@ -629,6 +602,7 @@ def main():
 									add_sound.play()
 								for tank_player in mytanksGroup:
 									tank_player.protected = True
+									pygame.time.wait(8000)
 							# 坦克升级
 							if myfood.kind == 5:
 								if music:
@@ -643,6 +617,10 @@ def main():
 							if myfood.kind == 7:
 								add_sound.play()
 								tank_player.score += 40
+							# 坦克加速
+							if myfood.kind == 8:
+								add_sound.play()
+								tank_player.speed += 1
 							myfood.being = False
 							myfoodsGroup.remove(myfood)
 							break
@@ -657,24 +635,23 @@ def main():
 		show_end_interface(screen, 630, 680, False)
 
 
-
 # 结束界面显示
 def show_end_interface(screen, width, height, is_win):
 	bg_img = pygame.image.load("./images/others/background.png")
 	screen.blit(bg_img, (0, 50))
-	font = pygame.font.Font('./font/simkai.ttf', width//10)
+	font = pygame.font.Font('./font/simkai.ttf', width // 10)
 	if is_win:
-		content = font.render(u'恭喜通关！', True, (255, 0, 0))  #添加游戏分数字样
+		content = font.render(u'恭喜通关！', True, (255, 0, 0))  # 添加游戏分数字样
 		rect = content.get_rect()
-		rect.midtop = (width/2, height/2)
+		rect.midtop = (width / 2, height / 2)
 		screen.blit(content, rect)
 	else:
 		fail_img = pygame.image.load("./images/others/gameover.png")
 		rect = fail_img.get_rect()
-		rect.midtop = (width/2, height/2)
+		rect.midtop = (width / 2, height / 2)
 		screen.blit(fail_img, rect)
 	font2 = pygame.font.Font('./font/simkai.ttf', width // 28)
-	restart = font2.render(u'按R键重新开始...',True,(255,0,0))
+	restart = font2.render(u'按R键重新开始...', True, (255, 0, 0))
 	restartrect = restart.get_rect()
 	restartrect.midtop = (width / 1.8, height / 1.5)
 	screen.blit(restart, restartrect)

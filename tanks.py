@@ -7,17 +7,31 @@ from mine import Mine
 
 # 我方坦克类
 class myTank(pygame.sprite.Sprite):
-    def __init__(self, player):
+    def __init__(self, player,skin):
         pygame.sprite.Sprite.__init__(self)
         # 玩家编号(1/2)
         self.player = player
         # 不同玩家用不同的坦克(不同等级对应不同的图)
-        if player == 1:
-            self.tanks = ['./images/myTank/tank_T1_0.png', './images/myTank/tank_T1_1.png',
+        tank_skin0 =  ['./images/myTank/tank_T1_0.png', './images/myTank/tank_T1_1.png',
                           './images/myTank/tank_T1_2.png']
-        elif player == 2:
-            self.tanks = ['./images/myTank/tank_T2_0.png', './images/myTank/tank_T2_1.png',
+        tank_skin4 =  ['./images/myTank/tank_T2_0.png', './images/myTank/tank_T2_1.png',
                           './images/myTank/tank_T2_2.png']
+        tank_skin2 =  ['./images/myTank/tank_T3_0.png', './images/myTank/tank_T3_1.png',
+                          './images/myTank/tank_T3_2.png']
+        tank_skin3 =  ['./images/myTank/tank_T4_0.png', './images/myTank/tank_T4_1.png',
+                          './images/myTank/tank_T4_2.png']
+        tank_skin1 =  ['./images/myTank/tank_T5_0.png', './images/myTank/tank_T5_1.png',
+                          './images/myTank/tank_T5_2.png']
+        if skin == 0:
+            self.tanks = tank_skin0
+        elif skin == 1:
+            self.tanks = tank_skin1
+        elif skin == 2:
+            self.tanks = tank_skin2
+        elif skin == 3:
+            self.tanks = tank_skin3
+        elif skin == 4:
+            self.tanks = tank_skin4
         else:
             raise ValueError('myTank class -> player value error.')
         # 坦克等级(初始0)

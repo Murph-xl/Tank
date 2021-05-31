@@ -36,6 +36,7 @@ class Tank_boom:
         self.image_boom3 = pygame.image.load("./images/Boom/boom3.png").convert_alpha()
         self.image_boom4 = pygame.image.load("./images/Boom/boom4.png").convert_alpha()
 
+
     # 在屏幕的显示
     def display(self, screen):
         screen.blit(self.image_play_continuously[self.play_index], self.rect)

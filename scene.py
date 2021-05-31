@@ -5,59 +5,59 @@ import random
 
 # 石头墙
 class Brick(pygame.sprite.Sprite):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.brick = pygame.image.load('./images/scene/brick.png')
-        # 默认方向
-        self.direction_x, self.direction_y = 0, -1
-        self.rect = self.brick.get_rect()
-        # 在坦克类中再赋实际值
-        # self.rect.left, self.rect.right = 0, 0
-        # 是否存活
-        self.being = False
+	def __init__(self):
+		pygame.sprite.Sprite.__init__(self)
+		self.brick = pygame.image.load('./images/scene/brick.png')
+		# 默认方向
+		self.direction_x, self.direction_y = 0, -1
+		self.rect = self.brick.get_rect()
+		# 在坦克类中再赋实际值
+		# self.rect.left, self.rect.right = 0, 0
+		# 是否存活
+		self.being = False
 
-    def turn(self, direction_x, direction_y):
-        self.direction_x, self.direction_y = direction_x, direction_y
-        if self.direction_x == 0 and self.direction_y == -1:
-            self.brick = pygame.image.load('./images/scene/brick1.png')
-        elif self.direction_x == 0 and self.direction_y == 1:
-            self.brick = pygame.image.load('./images/scene/brick1.png')
-        elif self.direction_x == -1 and self.direction_y == 0:
-            self.brick = pygame.image.load('./images/scene/brick2.png')
-        elif self.direction_x == 1 and self.direction_y == 0:
-            self.brick = pygame.image.load('./images/scene/brick2.png')
-        else:
-            raise ValueError('Bullet class -> direction value error.')
+	def turn(self, direction_x, direction_y):
+		self.direction_x, self.direction_y = direction_x, direction_y
+		if self.direction_x == 0 and self.direction_y == -1:
+			self.brick = pygame.image.load('./images/scene/brick1.png')
+		elif self.direction_x == 0 and self.direction_y == 1:
+			self.brick = pygame.image.load('./images/scene/brick1.png')
+		elif self.direction_x == -1 and self.direction_y == 0:
+			self.brick = pygame.image.load('./images/scene/brick2.png')
+		elif self.direction_x == 1 and self.direction_y == 0:
+			self.brick = pygame.image.load('./images/scene/brick2.png')
+		else:
+			raise ValueError('Bullet class -> direction value error.')
 
 
 # 钢墙
 class Iron(pygame.sprite.Sprite):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.iron = pygame.image.load('./images/scene/iron.png')
-        self.rect = self.iron.get_rect()
-        self.being = False
+	def __init__(self):
+		pygame.sprite.Sprite.__init__(self)
+		self.iron = pygame.image.load('./images/scene/iron.png')
+		self.rect = self.iron.get_rect()
+		self.being = False
 
 
 # 冰
 class Ice(pygame.sprite.Sprite):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.ice = pygame.image.load('./images/scene/ice.png')
-        self.rect = self.ice.get_rect()
-        self.being = False
+	def __init__(self):
+		pygame.sprite.Sprite.__init__(self)
+		self.ice = pygame.image.load('./images/scene/ice.png')
+		self.rect = self.ice.get_rect()
+		self.being = False
 
 
 # 河流
 class River(pygame.sprite.Sprite):
-    def __init__(self, kind=None):
-        pygame.sprite.Sprite.__init__(self)
-        if kind is None:
-            self.kind = random.randint(0, 1)
-        self.rivers = ['./images/scene/river1.png', './images/scene/river2.png']
-        self.river = pygame.image.load(self.rivers[self.kind])
-        self.rect = self.river.get_rect()
-        self.being = False
+	def __init__(self, kind=None):
+		pygame.sprite.Sprite.__init__(self)
+		if kind is None:
+			self.kind = random.randint(0, 1)
+		self.rivers = ['./images/scene/river1.png', './images/scene/river2.png']
+		self.river = pygame.image.load(self.rivers[self.kind])
+		self.rect = self.river.get_rect()
+		self.being = False
 
 
 # 树
@@ -907,3 +907,4 @@ class Map():
             self.iron.rect.left, self.iron.rect.top = 3 + x * 24, 3 + y * 24 + 50
             self.iron.being = True
             self.ironGroup.add(self.iron)
+

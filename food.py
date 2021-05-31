@@ -26,16 +26,20 @@ class Food(pg.sprite.Sprite):
         self.food_coin = './images/food/coin.png'
         # 加速器加快坦克速度
         self.food_speedup = './images/food/food_accelerate.png'
+        # 传送门
+        self.door = './images/food/food_xuan.png'
 
 
         # 用一个列表储存所有食物
         self.foods = [self.food_boom, self.food_sleep, self.food_powerbullet, self.food_ironwall, self.food_protect,
-                      self.food_level_up, self.food_life, self.food_coin, self.food_speedup]
+                      self.food_level_up, self.food_life, self.food_coin, self.food_speedup,self.door]
 
         # 食物种类
         self.kind = None
+        self.kind2 =None
         # 生成的食物
         self.food = None
+        self.food2=None
         # 图像大小
         self.rect = None
         # 是否在界面上出现 默认不出现
@@ -44,14 +48,30 @@ class Food(pg.sprite.Sprite):
         self.time = 1000
 
     def generate(self):
-        # 随机生成食物种类序号0-8
-        self.kind = random.randint(0, 8)
+        # 随机生成食物种类序号0-9
+        self.kind = random.randint(0, 9)
         # 根据序号加载食物图像
-        self.food = pg.image.load(self.foods[self.kind]).convert_alpha()
+        self.kind2 = 8
+        # self.food = pg.image.load(self.foods[self.kind]).convert_alpha()
         # 设置食物位置
+        if self.kind < 8:
+             self.food = pg.image.load(self.foods[self.kind]).convert_alpha()
+        else:
+            self.food = pg.image.load(self.foods[self.kind2]).convert_alpha()
+            self.food2 = pg.image.load(self.foods[self.kind2]).convert_alpha()
+       
+        # 设置食物大小
         self.rect = self.food.get_rect()
         self.rect.left = random.randint(100, 500)
         self.rect.top = random.randint(100, 500)
+        
+        x=random.randint(1, 2)
+        self.rect2 = self.food.get_rect()
+        if x == 1:
+            self.rect2.left, self.rect2.top = 3 + 1 * 6 * 24, 53
+        else:
+            self.rect2.left, self.rect2.top = 3 + 3 * 6 * 24, 53
+
         # 显示食物
         self.being = True
 

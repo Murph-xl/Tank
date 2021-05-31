@@ -72,6 +72,9 @@ class myTank(pygame.sprite.Sprite):
         self.protected = False
         # 子弹
         self.bullet = Bullet()
+        # 是否遇见树
+        self.meetTree = False
+
 
     def set_mine(self):
         self.mine_obj = Mine()
@@ -133,13 +136,13 @@ class myTank(pygame.sprite.Sprite):
     # 放置树
     def set_tree(self):
         self.tree_obj = scene.Tree()
-        self.tree_obj.tree = pygame.image.load('./images/scene/tree1.jpg')
+        self.tree_obj.tree = pygame.image.load('./images/scene/tree1.png')
         self.tree_obj.being = True
 
-        self.tree_obj.rect.left = self.rect.left
-        self.tree_obj.rect.top = self.rect.top
-        self.tree_obj.rect.right = self.rect.right
-        self.tree_obj.rect.bottom = self.rect.bottom
+        self.tree_obj.rect.left = self.rect.left-20
+        self.tree_obj.rect.top = self.rect.top-14
+        self.tree_obj.rect.right = self.rect.right-14
+        self.tree_obj.rect.bottom = self.rect.bottom-14
 
     # 等级提升
     def up_level(self):
@@ -180,6 +183,12 @@ class myTank(pygame.sprite.Sprite):
             self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
             is_move = False
 
+        # 撞草丛
+        if pygame.sprite.spritecollide(self, treeGroup, False, None) :
+            # self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
+            self.meetTree = True
+            is_move = True
+
         # 撞其他坦克
         if pygame.sprite.spritecollide(self, tankGroup, False, None):
             self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
@@ -213,6 +222,11 @@ class myTank(pygame.sprite.Sprite):
                 pygame.sprite.spritecollide(self, ironGroup, False, None):
             self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
             is_move = False
+        # 撞草丛
+        if pygame.sprite.spritecollide(self, treeGroup, False, None) :
+            # self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
+            self.meetTree = True
+            is_move = True
         # 撞其他坦克
         if pygame.sprite.spritecollide(self, tankGroup, False, None):
             self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
@@ -246,6 +260,11 @@ class myTank(pygame.sprite.Sprite):
                 pygame.sprite.spritecollide(self, ironGroup, False, None):
             self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
             is_move = False
+        # 撞草丛
+        if pygame.sprite.spritecollide(self, treeGroup, False, None) :
+            # self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
+            self.meetTree = True
+            is_move = True
         # 撞其他坦克
         if pygame.sprite.spritecollide(self, tankGroup, False, None):
             self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
@@ -274,6 +293,11 @@ class myTank(pygame.sprite.Sprite):
                 pygame.sprite.spritecollide(self, ironGroup, False, None):
             self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
             is_move = False
+        # 撞草丛
+        if pygame.sprite.spritecollide(self, treeGroup, False, None) :
+            # self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
+            self.meetTree = True
+            is_move = True
         # 撞河流
         if pygame.sprite.spritecollide(self, riverGroup, False, None) or \
                 pygame.sprite.spritecollide(self, ironGroup, False, None):
@@ -399,6 +423,9 @@ class enemyTank(pygame.sprite.Sprite):
         self.being = True
         # 子弹
         self.bullet = Bullet()
+        self.bullet.speed -= 2
+        # 是否遇见树
+        self.meetTree = False
 
     # 射击
     def shoot(self):
@@ -460,6 +487,13 @@ class enemyTank(pygame.sprite.Sprite):
             self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
             self.direction_x, self.direction_y = random.choice(([0, 1], [0, -1], [1, 0], [-1, 0]))
             is_move = False
+
+        # 撞草丛
+        if pygame.sprite.spritecollide(self, treeGroup, False, None) :
+            # self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
+            self.meetTree = True
+            is_move = True
+
         if pygame.sprite.collide_rect(self, myhome):
             self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
             self.direction_x, self.direction_y = random.choice(([0, 1], [0, -1], [1, 0], [-1, 0]))

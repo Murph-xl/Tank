@@ -25,6 +25,7 @@ def main():
     barProgress_img = pygame.image.load("./images/others/bar_progress.png").convert_alpha()
     open_img = pygame.image.load("./images/others/open.png")
     close_img = pygame.image.load("./images/others/close.png")
+    tree_img = pygame.image.load("./images/scene/tree.png").convert_alpha()
 
     # 加载音效
     music = True  # 默认播放音乐
@@ -57,7 +58,7 @@ def main():
         skin.append(skin_num2)
 
     # 关卡
-    stage = 2
+    stage = 0
     num_stage = 6
     # 游戏是否结束
     is_gameover = False
@@ -88,8 +89,7 @@ def main():
         mybulletsGroup = pygame.sprite.Group()
         enemybulletsGroup = pygame.sprite.Group()
         myfoodsGroup = pygame.sprite.Group()
-        # treeGroup = pygame.sprite.Group()
-        # riverGroup = pygame.sprite.Group()
+
 
         # 自定义事件
         # 	-生成敌方坦克事件
@@ -353,6 +353,9 @@ def main():
             if tank_player1 in mytanksGroup:
                 if is_switch_tank and player1_moving:
                     screen.blit(tank_player1.tank_0, (tank_player1.rect.left, tank_player1.rect.top))
+                    if tank_player1.meetTree == True:
+                        screen.blit(tree_img, (tank_player1.rect.left, tank_player1.rect.top))
+                        tank_player1.meetTree = False
                     player1_moving = False
                 else:
                     screen.blit(tank_player1.tank_1, (tank_player1.rect.left, tank_player1.rect.top))
@@ -362,11 +365,14 @@ def main():
                 if tank_player2 in mytanksGroup:
                     if is_switch_tank and player2_moving:
                         screen.blit(tank_player2.tank_0, (tank_player2.rect.left, tank_player2.rect.top))
-                        player1_moving = False
+                        if tank_player2.meetTree == True:
+                            screen.blit(tree_img, (tank_player2.rect.left, tank_player2.rect.top))
+                            tank_player2.meetTree = False
+                        player2_moving = False
                     else:
                         screen.blit(tank_player2.tank_1, (tank_player2.rect.left, tank_player2.rect.top))
                     if tank_player2.protected:
-                        screen.blit(tank_player1.protected_mask1, (tank_player2.rect.left, tank_player2.rect.top))
+                        screen.blit(tank_player2.protected_mask1, (tank_player2.rect.left, tank_player2.rect.top))
 
             # 敌方坦克
             for each in enemytanksGroup:
@@ -671,6 +677,10 @@ def main():
                                 tank_player.speed += 1
                             myfood.being = False
                             myfoodsGroup.remove(myfood)
+                            # 坦克碰到传送门
+                            if myfood.kind == 9:
+                                add_sound.play()
+                                tank_player.rect = myfood.rect2
                             break
                 else:
                     myfood.being = False

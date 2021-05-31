@@ -351,7 +351,7 @@ class enemyTank(pygame.sprite.Sprite):
         elif self.direction_x == 0 and self.direction_y == 1:
             self.tank_0 = self.tank.subsurface((0, 48), (48, 48))
             self.tank_1 = self.tank.subsurface((48, 48), (48, 48))
-            if self.rect.bottom > 630 - 3:
+            if self.rect.bottom > 630 - 12:
                 self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
                 self.direction_x, self.direction_y = random.choice(([0, 1], [0, -1], [1, 0], [-1, 0]))
                 is_move = False
@@ -365,7 +365,7 @@ class enemyTank(pygame.sprite.Sprite):
         elif self.direction_x == 1 and self.direction_y == 0:
             self.tank_0 = self.tank.subsurface((0, 144), (48, 48))
             self.tank_1 = self.tank.subsurface((48, 144), (48, 48))
-            if self.rect.right > 630 - 3:
+            if self.rect.right > 630 - 12:
                 self.rect = self.rect.move(self.speed * -self.direction_x, self.speed * -self.direction_y)
                 self.direction_x, self.direction_y = random.choice(([0, 1], [0, -1], [1, 0], [-1, 0]))
                 is_move = False
@@ -388,3 +388,4 @@ class enemyTank(pygame.sprite.Sprite):
         self.tank = pygame.image.load(self.tanks[self.kind][self.color]).convert_alpha()
         self.tank_0 = self.tank.subsurface((0, 48), (48, 48))
         self.tank_1 = self.tank.subsurface((48, 48), (48, 48))
+

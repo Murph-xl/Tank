@@ -24,11 +24,13 @@ class Food(pg.sprite.Sprite):
         self.food_life = './images/food/food_life.png'
         # 金币加分
         self.food_coin = './images/food/coin.png'
+        # 加速器加快坦克速度
+        self.food_speedup = './images/food/food_accelerate.png'
 
 
         # 用一个列表储存所有食物
         self.foods = [self.food_boom, self.food_sleep, self.food_powerbullet, self.food_ironwall, self.food_level_up,
-                      self.food_protect, self.food_life, self.food_coin]
+                      self.food_protect, self.food_life, self.food_coin, self.food_speedup]
 
         # 食物种类
         self.kind = None
@@ -42,8 +44,8 @@ class Food(pg.sprite.Sprite):
         self.time = 1000
 
     def generate(self):
-        # 随机生成食物种类序号0-7
-        self.kind = random.randint(0, 7)
+        # 随机生成食物种类序号0-8
+        self.kind = random.randint(0, 8)
         # 根据序号加载食物图像
         self.food = pg.image.load(self.foods[self.kind]).convert_alpha()
         # 设置食物大小
